@@ -16,6 +16,7 @@ import io.github.townyadvanced.townyresources.controllers.TownResourceOffersCont
 import io.github.townyadvanced.townyresources.controllers.TownResourceProductionController;
 import io.github.townyadvanced.townyresources.listeners.*;
 import io.github.townyadvanced.townyresources.settings.TownyResourcesSettings;
+import io.github.townyadvanced.townyresources.util.SurveyPlotUtil;
 import io.github.townyadvanced.townyresources.util.TownyResourcesMessagingUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -82,6 +83,9 @@ public class TownyResources extends JavaPlugin {
 			//Load commands and listeners
 			registerCommands();
 			registerListeners();
+
+			SurveyPlotUtil.registerSurveyPlot();
+
 		} catch (TownyException te) {
 			severe(te.getMessage());
             severe("TownyResources failed to load! Disabling!");
@@ -95,6 +99,7 @@ public class TownyResources extends JavaPlugin {
 		info("TownyResources loaded successfully.");
 		return true;
 	}
+
 
 	/**
 	 * Re-Load towny resources
@@ -112,6 +117,8 @@ public class TownyResources extends JavaPlugin {
 			TownResourceProductionController.recalculateAllProduction();
 			PlayerExtractionLimitsController.loadAllResourceExtractionCategories();
 			PlayerExtractionLimitsController.reloadAllExtractionRecordsForLoggedInPlayers();
+
+			SurveyPlotUtil.registerSurveyPlot();
 		} catch (Exception e) {
             e.printStackTrace();
 			severe(e.getMessage());
@@ -163,6 +170,7 @@ public class TownyResources extends JavaPlugin {
 		pm.registerEvents(new TownyResourcesTownyEventListener(), this);
 		pm.registerEvents(new TownyResourcesTownEventListener(), this);
 		pm.registerEvents(new TownyResourcesNationEventListener(), this);
+		pm.registerEvents(new TownBlockListener(), this);
 		if(isDynmapTownyInstalled())
 			pm.registerEvents(new TownyResourcesDynmapTownyListener(), this);
 	}
